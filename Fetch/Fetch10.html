@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch 10</title>
+  <script>
+    function randomDate() {
+      let now = new Date();
+      let ago = Math.floor(Math.random() * 30);
+      let randomDate = new Date(now);
+      randomDate.setDate(now.getDate() - ago);
+      return randomDate;
+    }
+
+    async function fetchWithDates() {
+      let response1 = await fetch("https://jsonplaceholder.typicode.com/users");
+      let response2 = await fetch("https://jsonplaceholder.typicode.com/todos");
+
+      let users = await response1.json();
+      let todos = await response2.json();
+
+      todos = todos.map(todo => ({ ...todo, started: randomDate() }));
+
+      let startDate = new Date(document.getElementById("startDate").value);
+
+      let leaderboard = users.map(user => {
+        let userTodos = todos.filter(todo => todo.userId == user.id && todo.completed);
+        let range = userTodos.filter(todo => {return todo.started >=startDate;});
+        return { name: user.name,count: range.length };
+      });
+
+
+      leaderboard.sort((a, b) => b.count - a.count);
+
+      let output = "<h2>Leaderboard - started after "+startDate +"</h2><ol>";
+      for(let j=0;j<leaderboard.length;j++){
+        output += "<li><strong>"+leaderboard[j].name+"</strong> - "+leaderboard[j].count+" tasks started</li>";
+      }
+      output += "</ol>";
+      document.getElementById("output").innerHTML = output;
+    }
+  </script>
+</head>
+<body>
+<h2>Exercise Ten - HARD</h2>
+<label>Start Date: <input type="date" id="startDate"></label>
+<button onclick="fetchWithDates()">Generate Leaderboard</button>
+<div id="output"></div>
+</body>
+</html>

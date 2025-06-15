@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch5</title>
+  <script>
+    function fetchUsersAndTodos() {
+      fetch("https://jsonplaceholder.typicode.com/users")
+        .then(response => response.json())
+        .then(users => {
+          fetch("https://jsonplaceholder.typicode.com/todos")
+            .then(response => response.json())
+            .then(todos => {
+
+              let output = "<ul>";
+              users.forEach(user => {
+                let task = todos.find(todo => todo.userId === user.id && todo.completed);
+                output += "<li><strong>"+user.name+"</strong>, firstly completed => <em>"+task.title+"</em></li>";
+              });
+
+              output += "</ul>";
+              document.getElementById("users").innerHTML = output;
+            })
+
+        })
+
+    }
+    async function fetchUsersAndTodosA() {
+      let url1 ="https://jsonplaceholder.typicode.com/users";
+      let url2 = "https://jsonplaceholder.typicode.com/todos";
+
+      let response1 = await fetch(url1);
+      let response2 =await  fetch(url2);
+
+      let users = await response1.json();
+      let todos= await response2.json();
+
+      let output = "<ul>";
+      users.forEach(user => {
+        let task = todos.find(todo => todo.userId === user.id && todo.completed);
+        output += "<li><strong>"+user.name+"</strong>, firstly completed => <em>"+task.title+"</em></li>";
+      });
+
+      output += "</ul>";
+      document.getElementById("usersA").innerHTML = output;
+    }
+
+    //==================Vtor nacin======================
+    /**async function fetchUsersAndTodosA() {
+      let url1 ="https://jsonplaceholder.typicode.com/users";
+      let url2 = "https://jsonplaceholder.typicode.com/todos";
+
+      let response1 = await fetch(url1);
+      let response2 =await  fetch(url2);
+
+      let users = await response1.json();
+      let todos= await response2.json();
+
+      let output = "<ul>";
+      for (let i=0;i<users.length;i++){
+          for ( let j=0;j<todos.length;j++){
+            if (todos[j].userId === users[i].id && todos[j].completed){
+              output += "<li>"+users[i].name+", completed => <em>"+todos[j].title+"</em></li>";
+              break;
+            }
+          }
+      }
+
+      output += "</ul>";
+      document.getElementById("users").innerHTML = output;
+    }**/
+  </script>
+</head>
+<body>
+<h1>Exercise Five - MEDIUM</h1>
+<h2>Get Users and First Completed Task</h2>
+<button onclick="fetchUsersAndTodos()">Get Users and Fist Completed Task</button>
+<div id="users"></div>
+<button onclick="fetchUsersAndTodosA()">Get Users and Fist Completed Task(async - await)</button>
+<div id="usersA"></div>
+</body>
+</html>
+

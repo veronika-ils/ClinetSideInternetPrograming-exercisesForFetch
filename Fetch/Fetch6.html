@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch6</title>
+  <script>
+    function fetchUsersAndPercentage() {
+      fetch("https://jsonplaceholder.typicode.com/users")
+        .then(response => response.json())
+        .then(users => {
+          fetch("https://jsonplaceholder.typicode.com/todos")
+            .then(response => response.json())
+            .then(todos => {
+              let output = "<ul>";
+              users.forEach(user => {
+                let userTodos = todos.filter(todo => todo.userId === user.id);
+                let completedCount = userTodos.filter(todo => todo.completed);
+                let percentage = ((completedCount.length / userTodos.length) * 100).toFixed(2);
+
+                output += "<li><strong>"+user.name+"</strong>: "+percentage+"% tasks completed</li>";
+              });
+
+              output += "</ul>";
+              document.getElementById("output").innerHTML = output;
+            })
+
+        })
+
+    }
+    async function fetchUsersAndPercentageA() {
+      let url1 = "https://jsonplaceholder.typicode.com/users";
+      let url2 = "https://jsonplaceholder.typicode.com/todos";
+
+      let response1 =await fetch(url1);
+      let response2 =await fetch(url2);
+
+      let users = await response1.json();
+      let todos = await response2.json();
+
+      let output ="<ul>";
+      users.forEach(user => {
+        let userTodos = todos.filter(todo => todo.userId == user.id);
+        let completedCount = userTodos.filter(todo=> todo.completed);
+        let percentage = ((completedCount.length / userTodos.length) * 100).toFixed(2);
+
+        output += "<li><strong>"+user.name+"</strong>: "+percentage+"% tasks completed</li>";
+      });
+
+      output += "</ul>";
+      document.getElementById("outputA").innerHTML = output;
+
+    }
+  </script>
+</head>
+<body>
+<h1>Exercise Six - MEDIUM</h1>
+<h2>Get Users and Percentage Completed Task</h2>
+<button onclick="fetchUsersAndPercentage()">Get Users and Percentage Completed Task</button>
+<div id="output"></div>
+<button onclick="fetchUsersAndPercentageA()">Get Users and Percentage Completed Task(async - await)</button>
+<div id="outputA"></div>
+</body>
+</html>
+

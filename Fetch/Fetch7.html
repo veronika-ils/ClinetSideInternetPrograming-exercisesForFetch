@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch 7</title>
+  <script>
+    function fetchLeaderboard() {
+      fetch("https://jsonplaceholder.typicode.com/users")
+        .then(response => response.json())
+        .then(users => {
+          fetch("https://jsonplaceholder.typicode.com/todos")
+            .then(response => response.json())
+            .then(todos => {
+              let userTaskCount = [];
+
+              users.forEach(user => {
+                let completedTasks = 0;
+
+                todos.forEach(todo => {
+                  if (todo.userId ===user.id && todo.completed) {
+                    completedTasks++;
+                  }
+                });
+
+                user.completedTasks = completedTasks//dodavame nov atribut
+                userTaskCount.push(user)
+              });
+
+              userTaskCount.sort((a, b) => b.completedTasks - a.completedTasks);
+
+              let output = "<h2>To-Do Leaderboard</h2><ol>";
+              userTaskCount.forEach(user => {
+                output += "<li><strong>"+user.name+"</strong> - "+user.completedTasks+" tasks completed</li>";
+              });
+              output +="</ol>";
+              document.getElementById("output").innerHTML = output;
+            })
+
+        })
+
+    }
+    async function fetchLeaderboardA() {
+      let response1 = await fetch("https://jsonplaceholder.typicode.com/users");
+      let response2 = await fetch("https://jsonplaceholder.typicode.com/todos");
+
+      let users = await response1.json();
+      let todos = await response2.json();
+      let userTaskCount = [];
+
+      users.forEach(user => {
+        let completedTasks = 0;
+
+        todos.forEach(todo => {
+          if (todo.userId ===user.id && todo.completed) {
+            completedTasks++;
+          }
+        });
+
+        user.completedTasks = completedTasks//dodavame nov atribut
+        userTaskCount.push(user)
+      });
+
+      userTaskCount.sort((a, b) => b.completedTasks - a.completedTasks);
+
+      let output = "<h2>To-Do Leaderboard(async - await)</h2><ol>";
+      userTaskCount.forEach(user => {
+        output += "<li><strong>"+user.name+"</strong> - "+user.completedTasks+" tasks completed</li>";
+      });
+
+      output +="</ol>";
+      document.getElementById("outputA").innerHTML = output;
+    }
+
+    //====================Втора верзија========================
+   /** async function fetchLeaderboardA() {
+    let response1 = await fetch("https://jsonplaceholder.typicode.com/users");
+    let response2 = await fetch("https://jsonplaceholder.typicode.com/todos");
+
+    let users = await response1.json();
+    let todos = await response2.json();
+
+      let userTaskCount = users.map(user => ({
+        name: user.name,
+        completedTasks: todos.filter(todo =>todo.userId ==user.id && todo.completed).length
+      }));
+
+    userTaskCount.sort((a, b) => b.completedTasks - a.completedTasks);
+
+    let output = "<h2>To-Do Leaderboard(async - await)</h2><ol>";
+    userTaskCount.forEach(user => {
+    output += "<li><strong>"+user.name+"</strong> - "+user.completedTasks+" tasks completed</li>";
+    });
+
+    output +="</ol>";
+    document.getElementById("outputA").innerHTML = output;
+    }**/
+  </script>
+</head>
+<body>
+<h1>Exercise Seven - MEDIUM</h1>
+<button onclick="fetchLeaderboard()">Get Leaderboard</button>
+<button onclick="fetchLeaderboardA()">Get Leaderboard(async - await)</button>
+<div id="output"></div>
+<div id="outputA"></div>
+</body>
+</html>

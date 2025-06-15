@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch 14</title>
+</head>
+<body>
+
+
+<script>
+  async function analyze() {
+    let response1 = await fetch("https://jsonplaceholder.typicode.com/posts");
+    let response2 = await fetch("https://jsonplaceholder.typicode.com/comments");
+
+    let posts = await response1.json();
+    let comments = await response2.json();
+
+
+    let totallength = 0;
+    for (let comment of comments) {
+      totallength += comment.body.length;
+    }
+
+    let list = document.getElementById("avgLengths");
+
+
+    posts.forEach(post => {
+      let postComments = comments.filter(comment => comment.postId == post.id);
+      let postlength = 0;
+      for (let comment of postComments) {
+        postlength += comment.body.length;
+      }
+
+      let perc = 0;
+      if (totallength > 0) {
+        perc = ((postlength / totallength) * 100).toFixed(2);
+      }
+
+      list.innerHTML += "<li>Post #"+post.id+" – "+perc+"% of total comments length</li>";
+
+    });
+  }
+</script>
+<h2>Exercise Fourteen - HARD</h2>
+<button onclick="analyze()">Get results</button>
+<ul id="avgLengths"></ul>
+</body>
+</html>

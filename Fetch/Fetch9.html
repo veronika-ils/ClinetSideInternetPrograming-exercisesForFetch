@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch 9</title>
+  <script>
+    async function countWordInTitles() {
+      const word = document.getElementById('word').value.toLowerCase();
+      if (!word) return;
+
+      let url='https://jsonplaceholder.typicode.com/posts'
+      let response = await fetch(url);
+      let posts= await response.json()
+
+      let matched = posts.filter(p => p.title.toLowerCase().includes(word));
+      let number = matched.length
+
+      let output = "Found " + number + " post(s) with the word \"" + word + "\" in the title.<br><br>";
+      output += "<ul>";
+      matched.forEach(post => {
+        output += "<li>" + post.title + "</li>";
+      });
+
+      output += "</ul>";
+
+      document.getElementById('wordCount').innerHTML = output;
+    }
+  </script>
+</head>
+<body>
+<h2>Exercise Nine - MEDIUM</h2>
+<input type="text" id="word" placeholder="How many times word in titles?">
+<button onclick="countWordInTitles()">Count Titles with Word</button>
+<div id="wordCount"></div>
+</body>
+</html>

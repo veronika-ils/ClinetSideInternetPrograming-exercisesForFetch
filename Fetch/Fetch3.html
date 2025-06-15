@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch3</title>
+  <script>
+    function fetchPosts() {
+      fetch("https://jsonplaceholder.typicode.com/posts")
+        .then(response => response.json())
+        .then(posts => {
+          let output = "<ul>";
+          for (let i = 0; i < posts.length; i++) {
+            output += "<li>"+posts[i].title+"</li>";
+          }
+          output += "</ul>";
+          document.getElementById("posts").innerHTML = output;
+        })
+    }
+    async function fetchPostsA() {
+      let response = await fetch("https://jsonplaceholder.typicode.com/posts");
+      let posts = await response.json();
+
+      let output="<ul>";
+      for (let i=0;i<posts.length;i++){
+        output +="<li>"+posts[i].title+"</li>";
+      }
+      output +="</ul>"
+      document.getElementById("postsA").innerHTML = output;
+    }
+  </script>
+</head>
+<body>
+<h1>Exercise Three - EASY</h1>
+<h2>Fetch and Display Posts Title</h2>
+<button onclick="fetchPosts()">Get Posts Title</button>
+<div id="posts"></div>
+<button onclick="fetchPostsA()">Get Posts Title(async - await)</button>
+<div id="postsA"></div>
+</body>
+</html>
+

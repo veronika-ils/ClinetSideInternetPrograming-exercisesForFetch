@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch2</title>
+  <script>
+    function fetchUser() {
+      let url="https://jsonplaceholder.typicode.com/users/1";
+
+      fetch(url)
+        .then(response => response.json())
+        .then(user => {
+          document.getElementById("username").innerHTML = "<span>User: "+user.name+"</span>";
+        })
+
+    }
+    async function fetchUserA() {
+      let response = await fetch("https://jsonplaceholder.typicode.com/users/1");
+      let user = await response.json();
+
+      document.getElementById("usernameA").innerHTML = "<span>User: "+user.name+"</span>";
+    }
+  </script>
+</head>
+<body>
+<h1>Exercise Two - EASY</h1>
+<h2>Fetch User Name</h2>
+<button onclick="fetchUser()">Get User</button>
+<p id="username">User: </p>
+<button onclick="fetchUserA()">Get User(async - await)</button>
+<p id="usernameA">User: </p>
+</body>
+</html>

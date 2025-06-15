@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch 11</title>
+  <script>
+
+    function randomWeight() {
+      return Math.floor(Math.random() * 10) + 1;
+    }
+
+    async function fetchWeightedLeaderboard() {
+      let url1="https://jsonplaceholder.typicode.com/users"
+      let url2="https://jsonplaceholder.typicode.com/todos"
+
+      let response1 = await fetch(url1);
+      let response2 = await fetch(url2);
+
+      let users = await response1.json();
+      let todos = await response2.json();
+
+      todos = todos.map(todo => ({ ...todo, weight: randomWeight() }));
+
+      let leaderboard = users.map(user => {
+        let userTodos = todos.filter(todo => todo.userId === user.id && todo.completed);
+        let sum=0;
+        for(let i=0;i<userTodos.length;i++){
+          sum+=userTodos[i].weight;
+        }
+        return { name: user.name, score: sum };
+      });
+
+      leaderboard.sort((a, b) => b.score - a.score);
+
+      let output = "<ol>";
+      leaderboard.forEach(entry => {
+        output += "<li>"+entry.name+"- score: "+entry.score+"</li>";
+      });
+      //===============================================Another way===========
+     // for(let j=0;j<leaderboard.length;j++){
+     //   output +="<li>"+leaderboard[j].name+"- score: "+leaderboard[j].score+"</li>"
+      //}
+      //=====================================================================
+      output += "</ol>";
+      document.getElementById("output").innerHTML = output;
+    }
+  </script>
+</head>
+<body>
+<h1>Exercise Eleven - HARD</h1>
+<button onclick="fetchWeightedLeaderboard()">Generate Leaderboard</button>
+<h2>Weighted Task Leaderboard</h2>
+<div id="output"></div>
+</body>
+</html>

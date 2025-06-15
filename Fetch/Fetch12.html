@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch 12</title>
+</head>
+<body>
+
+<script>
+  async function searchGitHubRepos() {
+    let query = document.getElementById('search').value;
+    if (!query) return;
+
+    let res = await fetch("https://api.github.com/search/repositories?q="+query+"");
+    let data = await res.json();
+
+    let html = "<ul>";
+    console.log(data)//za pomos
+    console.log(data.items[0])//za pomos
+    //===========================Another way===============================================
+    //data.items.forEach(repo => {
+    //  html += "<li><a href="+repo.html_url+" >"+repo.name+"</a> ⭐ "+repo.stargazers_count+"</li>";
+    //});
+    //======================================================================================
+    for(let i=0;i<data.items.length;i++){
+      html += "<li><a href="+data.items[i].html_url+" >"+data.items[i].name+"</a> ⭐ "+data.items[i].stargazers_count+"</li>";
+    }
+    html += "</ul>";
+    document.getElementById('githubResults').innerHTML = html;
+  }
+
+</script>
+<h2>Exercise Twelve - HARD</h2>
+<input type="text" id="search" placeholder="Search GitHub">
+<button onclick="searchGitHubRepos()">Search GitHub</button>
+<div id="githubResults"></div>
+</body>
+</html>
+

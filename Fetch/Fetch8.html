@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch 8</title>
+  <script>
+    async function fetchProductivityLeaderboard() {
+      let url1 = "https://jsonplaceholder.typicode.com/users"
+      let url2 = "https://jsonplaceholder.typicode.com/todos"
+      let url3 = "https://jsonplaceholder.typicode.com/comments"
+
+      let response1 = await fetch(url1);
+      let response2 = await fetch(url2);
+      let response3 = await fetch(url3);
+
+      let users = await response1.json();
+      let todos = await response2.json();
+      let comments = await response3.json();
+
+      let userPoints = []
+        users.forEach(user=> {
+          let points = 0
+          todos.forEach(todo=>{
+                  if (todo.userId ===user.id && todo.completed){points++}
+          })
+          comments.forEach(comments=>{
+                  if(comments.email.includes(user.username)){points++}
+          })
+          userPoints.push({name:user.name,points})
+        })
+
+
+      userPoints.sort((a, b) => b.points - a.points);
+
+      let output = "<h2>Productivity Leaderboard</h2><ol>";
+      userPoints.forEach(user => {
+        output += "<li><strong>"+user.name+"</strong> - Score:"+user.points+"</li>";
+      });
+      output +="</ol>";
+      document.getElementById("output").innerHTML = output;
+
+    }
+  </script>
+</head>
+<body>
+<h1>Exercise Eight - MEDIUM</h1>
+<h2>User Productivity Score </h2>
+<button onclick="fetchProductivityLeaderboard()">Generate Leaderboard</button>
+<div id="output"></div>
+</body>
+</html>

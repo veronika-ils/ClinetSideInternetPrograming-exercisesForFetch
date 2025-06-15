@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch 15</title>
+</head>
+<body>
+
+<script>
+  let short = [];
+  let medium = [];
+  let long = [];
+
+  async function getcomments() {
+    let res = await fetch("https://jsonplaceholder.typicode.com/comments");
+    let all = await res.json();
+
+    all.forEach(c => {
+      let len = c.body.length;
+      let add = "<li>"+c.body.substring(0, 35)+"... <em>("+len+" карактери)</em></li>";
+      if (len < 50) {
+        short.push(add);
+      } else if (len <= 150) {
+        medium.push(add);
+      } else {
+        long.push(add);
+      }
+    });
+  }
+
+  function ByCategory() {
+    const cat = document.getElementById("lengthSelect").value;
+    const result = document.getElementById("result");
+
+    if (!cat) {
+      result.innerHTML = "";
+      return;
+    }
+
+    let list = "";
+    let data = [];
+
+    if (cat === "Мали") {
+      data = short;
+    } else if (cat === "Средни") {
+      data = medium;
+    } else if (cat === "Големи") {
+      data = long;
+    }
+
+    list = `<ul>${data.join("")}</ul>`;
+    result.innerHTML = "<h3>"+cat+" коментари – "+data.length+" коментари</h3>"+list+" ";
+  }
+
+  getcomments();
+</script>
+
+<h2>Exercise Fifteen - HARD</h2>
+
+<label>Категорија:</label>
+<select id="lengthSelect" onchange="ByCategory()">
+  <option value="">Избери</option>
+  <option value="Мали">Мали (<50 карактери)</option>
+  <option value="Средни">Средни (50–150 карактери)</option>
+  <option value="Големи">Големи (>150 карактери)</option>
+</select>
+
+<div id="result"></div>
+
+</body>
+</html>

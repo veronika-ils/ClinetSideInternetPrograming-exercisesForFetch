@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch 13</title>
+</head>
+<body>
+
+
+<script>
+
+  async function searchGitHubRepos() {
+    let query = document.getElementById('search').value;
+    if (!query) return;
+    let res = await fetch("https://api.github.com/search/repositories?q="+query+"");
+    let data = await res.json();
+    let html = "<ul>";
+
+    //===========================Another way===============================================
+    //data.items.forEach(repo => {
+    //   html += `<li><a onclick="showRepoDetails('${repo.full_name}')">${repo.name}</a> ⭐ ${repo.stargazers_count}</>li>`;
+    //  html +="<br/>"
+    //});
+    //======================================================================================
+    for(let i=0;i<data.items.length;i++){
+      html += `<li><a onclick="showDetails('${data.items[i].full_name}')">${data.items[i].name}</a> ⭐ ${data.items[i].stargazers_count}</li>`;
+      html +="<br/>"
+    }
+    html +="</ul>"
+
+    document.getElementById('results').innerHTML =html;
+  }
+
+  async function showDetails(fullName) {
+    let res=await fetch(`https://api.github.com/repos/${fullName}`);
+    let repo = await res.json();
+
+    let html =`<h3>${repo.full_name}</h3>
+    <p>Description:${repo.description} </p>
+    <p><a href="${repo.html_url} "> See on GitHub</a> <br/></p>
+    <button onclick="backToResults()"> Back to results</button>`;
+    document.getElementById('details').innerHTML = html;
+    document.getElementById('results').innerHTML = "";
+  }
+
+  function backToResults() {
+    document.getElementById('details').innerHTML = "";
+    searchGitHubRepos();
+  }
+</script>
+
+<h2>Exercise Thirteen - HARD</h2>
+<input type="text" id="search" placeholder="Search GitHub">
+<button onclick="searchGitHubRepos()">Search GitHub</button>
+<div id="results"></div>
+<div id="details"></div>
+</body>
+</html>
