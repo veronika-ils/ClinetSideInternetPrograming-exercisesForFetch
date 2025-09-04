@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch 7</title>
+
+</head>
+<body>
+<script>
+  function buildUrl(query) {
+    let base = "https://www.googleapis.com/books/v1/volumes";
+    return base + "?q=" + query + "&printType=books&maxResults=40";
+  }
+  function processData(data) {
+    let items = [];
+    if(data.items) {
+      for (let i = 0; i < data.items.length; i++) {
+        let vi = data.items[i].volumeInfo ;
+        if (vi) {
+          let title = vi.title;
+          let pages = vi.pageCount;
+          items.push({title: title, pages: pages});
+        }
+      }
+    }
+
+    items.sort(function (a, b) {
+      if (b.pages !== a.pages) return b.pages - a.pages;
+    });
+    if (!items.length) {
+      document.getElementById("out").innerHTML = "Нема резултати";
+      return;
+    }
+    let lis = "";
+    for (let i = 0; i < items.length; i++) {
+      lis += "<li><strong>" + items[i].title+ "</strong> — " + items[i].pages + " стр.</li>";
+    }
+    document.getElementById("out").innerHTML =
+      "<ul >" + lis + "</ul>";
+  }
+
+  async function loadA() {
+    let q = document.getElementById("q").value || "";
+    document.getElementById("out").innerHTML = "Вчитувам...";
+
+    let res = await fetch(buildUrl(q));
+
+    let data = await res.json();
+    processData(data);
+
+  }
+</script>
+<h1>Exercise Seven - MEDIUM</h1>
+<p>Внеси поим (пример: javascript, data science):</p>
+
+<input id="q" type="text" value="javascript" placeholder="QUERY">
+<button onclick="loadA()">Подреди ги книгите</button>
+
+<div id="out"></div>
+</body>
+</html>
