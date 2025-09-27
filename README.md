@@ -30,6 +30,4 @@ Each exercise demonstrates how to work with **real-world APIs** using both:
 14. **Comment Length Percentage** – Share of total comment length per post.  
 15. **Comment Categorization** – Small, medium, and large comments with counts.  
 
----
 
-## 📂 Repository Structure
